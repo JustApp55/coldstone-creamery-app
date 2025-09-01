@@ -1,14 +1,27 @@
-<script type="module">
-  window.__env = {
-    SB_URL: import.meta.env.VITE_SUPABASE_URL,
-    SB_ANON: import.meta.env.VITE_SUPABASE_ANON_KEY
-  };
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- meta, title, Tailwind CDN, styles, etc. -->
+</head>
+<body>
+  <!-- your full Cold Stone app HTML -->
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script>
-  const SB_URL  = window.__env?.SB_URL;
-  const SB_ANON = window.__env?.SB_ANON;
-  const sb = supabase.createClient(SB_URL, SB_ANON);
-  // rest of your Supabase code stays unchanged
-</script>
+  <!-- 1) ENV INJECTOR -->
+  <script type="module">
+    window.__env = {
+      SB_URL: import.meta.env.VITE_SUPABASE_URL,
+      SB_ANON: import.meta.env.VITE_SUPABASE_ANON_KEY
+    };
+  </script>
+
+  <!-- 2) SUPABASE INIT -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script>
+    const SB_URL  = window.__env?.SB_URL;
+    const SB_ANON = window.__env?.SB_ANON;
+    const sb = supabase.createClient(SB_URL, SB_ANON);
+
+    // ... rest of your JavaScript app code
+  </script>
+</body>
+</html>
