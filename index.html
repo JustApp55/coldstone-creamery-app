@@ -1,10 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- meta, title, Tailwind CDN, styles, etc. -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cold Stone Creamery® - The Ultimate Ice Cream Experience™</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Keep your Tailwind + animations from your compact build here */
+    body { font-family: Arial, Helvetica, sans-serif; }
+    .hero-bg { background: linear-gradient(45deg,#D2232A,#FF6B35,#FFD700,#32CD32,#0066CC); background-size:400% 400%; animation:gradientShift 8s ease infinite; }
+    @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .bounce-slow{animation:bounce 3s infinite}
+    .wiggle{animation:wiggle 2s ease-in-out infinite}
+    @keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+    .pulse-rainbow{animation:pulseRainbow 2s infinite}
+    @keyframes pulseRainbow{0%,100%{box-shadow:0 0 20px rgba(210,35,42,.6);transform:scale(1)}50%{box-shadow:0 0 30px rgba(255,215,0,.8);transform:scale(1.05)}}
+  </style>
 </head>
-<body>
-  <!-- your full Cold Stone app HTML -->
+<body class="bg-gradient-to-br from-yellow-50 to-pink-50">
+  <!-- 🔥 MAIN APP CONTENT -->
+  <div class="bg-coldstone-red text-white text-center py-2 font-bold">🎉 LIMITED TIME: Buy One Get One FREE! 🎉</div>
+  <section class="hero-bg text-white py-20 text-center">
+    <h1 class="text-6xl md:text-8xl font-bold mb-6 bounce-slow">THE ULTIMATE<br>ICE CREAM EXPERIENCE™</h1>
+    <p class="text-2xl mb-8 wiggle">Fresh Ice Cream Mixed with Your Favorite Ingredients!</p>
+    <div class="flex flex-col sm:flex-row gap-6 justify-center">
+      <button onclick="showPage('order')" class="bg-white text-coldstone-red px-10 py-5 rounded-full text-2xl font-bold hover:bg-yellow-100 pulse-rainbow">🍦 ORDER ONLINE NOW!</button>
+      <button onclick="showPage('locations')" class="bg-coldstone-yellow text-gray-800 px-10 py-5 rounded-full text-2xl font-bold hover:bg-yellow-400">📍 FIND A STORE</button>
+    </div>
+  </section>
+  <!-- add your Seasonal, Menu, Order, Rewards, Locations, Footer sections here from your compact build -->
 
   <!-- 1) ENV INJECTOR -->
   <script type="module">
@@ -12,6 +36,9 @@
       SB_URL: import.meta.env.VITE_SUPABASE_URL,
       SB_ANON: import.meta.env.VITE_SUPABASE_ANON_KEY
     };
+    if (!window.__env.SB_URL || !window.__env.SB_ANON) {
+      console.warn("[ENV] Missing Supabase keys!");
+    }
   </script>
 
   <!-- 2) SUPABASE INIT -->
@@ -21,7 +48,34 @@
     const SB_ANON = window.__env?.SB_ANON;
     const sb = supabase.createClient(SB_URL, SB_ANON);
 
-    // ... rest of your JavaScript app code
+    if (!SB_URL || !SB_ANON) {
+      console.warn("[Supabase] Client not configured; missing env vars.");
+    }
+
+    // Example saveOrder()
+    async function saveOrder(order) {
+      const { error } = await sb.from("orders").insert(order);
+      if (error) {
+        console.error("Order save failed:", error.message);
+        alert("Order failed: " + error.message);
+      } else {
+        alert("Order saved! 🎉");
+      }
+    }
+
+    // Example joinClub()
+    async function joinClub(member) {
+      const { error } = await sb.from("club_signups").insert(member);
+      if (error) {
+        console.error("Signup failed:", error.message);
+        alert("Signup failed: " + error.message);
+      } else {
+        alert("Welcome to the Cold Stone Club! ⭐");
+      }
+    }
+
+    // Example nav (simplified)
+    function showPage(page){ console.log("Switch to page:", page); }
   </script>
 </body>
 </html>
